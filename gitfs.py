@@ -1,4 +1,4 @@
-#/usr/bin/env python
+#/usr/bin/env python2
 # coding: utf-8
 import argparse
 from collections import namedtuple
@@ -82,7 +82,7 @@ class GitFS(fuse.Fuse):
         stat_repo = os.lstat(self.repo.path)
         default_stat_dir = copy_stat(stat_repo, st_ino=0,
                                      # This is read-only file system
-                                     st_mode=stat_repo.st_mode &~ 0222)
+                                     st_mode=stat_repo.st_mode &~ 0o222)
 
         if path == "/":
             return default_stat_dir
@@ -113,7 +113,7 @@ class GitFS(fuse.Fuse):
             blob = self.repo[entry.oid]
             size = len(blob.data)
             # This is read-only file system
-            mode = entry.attributes &~ 0222
+            mode = entry.attributes &~ 0o222
             return copy_stat(stat_repo, st_ino=0, st_size=size, st_mode=mode)
 
         return -errno.ENOENT
